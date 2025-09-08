@@ -1,0 +1,76 @@
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://postgres:5432/auth_service
+    username: postgres
+    password: Manyika12!
+    driver-class-name: org.postgresql.Driver
+  config:
+    import: optional:configserver:http://config-server:8888
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/easyerrands-realm
+          jwk-set-uri: http://localhost:8080/realms/easyerrands-realm/protocol/openid-connect/certs
+  cache:
+    type: redis
+  data:
+    redis:
+      host: redis   # name from docker-compose
+      port: 6379
+keycloak:
+  realm: easyerrands-realm
+  auth-server-url: http://localhost:8080
+  resource: auth-service
+  bearer-only: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update       # or validate / create / none / create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true           # Show SQL queries in console
+    open-in-view: false
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discover-service:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+    initial-instance-info-replication-interval-seconds: 40
+    registry-fetch-interval-seconds: 10
+    instance:
+      prefer-ip-address: true
+      hostname: auth-service
+      lease-renewal-interval-in-seconds: 10
+      lease-expiration-duration-in-seconds: 30
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: auth-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.sangura.*"
+        spring.json.value.default.type: "com.sangura.common.events.AuthEvent"
+    listener:
+      ack-mode: record
+      missing-topics-fatal: false
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+

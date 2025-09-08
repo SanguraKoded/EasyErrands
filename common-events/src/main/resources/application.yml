@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: common-events
+  kafka:
+    admin:
+      properties:
+        bootstrap.servers: localhost:9092
+    topics:
+      - name: assignment-events
+        num-partitions: 3
+        replication-factor: 1
+      - name: errand-events
+        num-partitions: 3
+        replication-factor: 1
+      - name: tracking-events
+        num-partitions: 5
+        replication-factor: 1
+      - name: auth-events
+        num-partitions: 1
+        replication-factor: 1
+

@@ -1,0 +1,216 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Manyika12!
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ~/.m2:/root/.m2   # Shared Maven cache
+      - postgres_data:/var/lib/postgresql/data   # ✅ Persistent DB volume
+
+    networks:
+      - easyerrands-net
+
+
+  assignment-service:
+    build:
+      context: .
+      dockerfile: ./assignment-service/Dockerfile
+    container_name: assignment-container
+    ports:
+      - "8081:8081"
+    volumes:
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - discovery-service
+    networks:
+      - easyerrands-net
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./auth-service/Dockerfile
+    container_name: auth-container
+    ports:
+      - "8082:8082"
+    volumes:
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - discovery-service
+    networks:
+      - easyerrands-net
+  errand-service:
+    build:
+      context: .
+      dockerfile: ./errand-service/Dockerfile
+    container_name: errand-container
+    ports:
+      - "8083:8083"
+    volumes:
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - discovery-service
+    networks:
+      - easyerrands-net
+  tracking-service:
+    build:
+      context: .
+      dockerfile: ./tracking-service/Dockerfile
+    container_name: tracking-container
+    ports:
+      - "8084:8084"
+    volumes:
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - discovery-service
+    networks:
+      - easyerrands-net
+  discovery-service:
+    build:
+      context: .
+      dockerfile: ./discovery-service/Dockerfile
+    ports:
+      - "8761:8761"
+    volumes:
+      - ~/.m2:/root/.m2
+    networks:
+      - easyerrands-net
+  config-server:
+    build:
+      context: .
+      dockerfile: ./config-server/Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ~/.m2:/root/.m2
+    networks:
+      - easyerrands-net
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8085:8085"
+    volumes:
+      - ~/.m2:/root/.m2
+    depends_on:
+      - assignment-service
+      - errand-service
+      - auth-service
+      - tracking-service
+      - keycloak
+    networks:
+      - easyerrands-net
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro   # SSL certs go here
+    depends_on:
+      - api-gateway
+    networks:
+      - easyerrands-net
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.4
+    container_name: easyerrands-keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloakpass
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - easyerrands-net
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - easyerrands-net
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log
+      - ./promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - easyerrands-net
+
+  grafana:
+    image: grafana/grafana:10.0.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - easyerrands-net
+  redis:
+    image: redis:7.2
+    container_name: easyerrands-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - easyerrands-net
+  redisinsight:
+    image: redis/redisinsight:2.56
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    networks:
+      - easyerrands-net
+
+
+
+  kafka:
+    image: bitnami/kafka:3.7
+    container_name: kafka
+    ports:
+      - "9092:9092"        # external access (optional)
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true   # dev only
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "kafka-topics.sh --bootstrap-server localhost:9092 --list" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - easyerrands-net
+
+
+
+networks:
+  easyerrands-net:
+    driver: bridge
+volumes:
+  postgres_data: {}   # ✅ Declare the named volume here

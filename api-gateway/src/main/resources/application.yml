@@ -1,0 +1,32 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: assignment-service
+          uri: http://assignment-service:8081
+          predicates:
+            - Path=/assignments/**
+        - id: errand-service
+          uri: http://errand-service:8083
+          predicates:
+            - Path=/errands/**
+        - id: tracking-service
+          uri: http://tracking-service:8084
+          predicates:
+            - Path=/tracking/**
+        - id: auth-service
+          uri: http://auth-service:8082
+          predicates:
+            - Path=/users/**
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://easyerrands-keycloak:8080/realms/EasyErrandsRealm
