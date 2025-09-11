@@ -107,6 +107,39 @@
 			<artifactId>spring-boot-starter-cache</artifactId>
 			<version>3.5.3</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.13.4</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<version>1.21.3</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Postgres Testcontainer -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Kafka Testcontainer (for async events) -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>kafka</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.redis.testcontainers</groupId>
+			<artifactId>testcontainers-redis</artifactId>
+			<version>1.6.4</version>
+		</dependency>
 		<dependency>
 			<groupId>com.sangura</groupId>
 			<artifactId>common-events</artifactId>
@@ -163,6 +196,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 	<dependencyManagement>

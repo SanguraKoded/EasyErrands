@@ -12,6 +12,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      docker:
+        image: docker:24.0.7-dind
+        options: --privileged
+        ports:
+          - 5432:5432
+          - 9092:9092
+        volumes:
+          - /var/lib/docker
+
     steps:
       # 1. Checkout code (with submodules)
       - name: Checkout repository
