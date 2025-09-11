@@ -140,6 +140,13 @@
 			<artifactId>testcontainers-redis</artifactId>
 			<version>1.6.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/kafka-utils/kafka-utils -->
+
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.sangura</groupId>
 			<artifactId>common-events</artifactId>
