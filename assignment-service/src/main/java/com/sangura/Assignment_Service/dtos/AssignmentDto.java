@@ -10,6 +10,15 @@ public class AssignmentDto {
 
     private Long taskerId;
 
+    public AssignmentDto() {
+    }
+
+    public AssignmentDto(Long id, Long errandId, Long taskerId) {
+        this.id = id;
+        this.errandId = errandId;
+        this.taskerId = taskerId;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

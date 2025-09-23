@@ -10,4 +10,6 @@ public interface TaskerServiceClient {
 
     @GetMapping("/tasker/{id}")
     TaskerSavedDto findTaskerById(@PathVariable  ("id") Long id);
+
+    TaskerSavedDto findTaskerByUsername(@PathVariable String username);
 }

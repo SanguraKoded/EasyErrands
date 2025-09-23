@@ -6,6 +6,15 @@ public class AssignmentCreateDto {
 
     private Long taskerId;
 
+    public AssignmentCreateDto(Long errandId, Long taskerId) {
+        this.errandId = errandId;
+        this.taskerId = taskerId;
+    }
+
+
+    public AssignmentCreateDto() {
+    }
+
     @Override
     public String toString() {
         return "AssignmentDto{" +
