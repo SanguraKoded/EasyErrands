@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RefreshScope
 public class AppUsersServiceImpl implements AppUsersService{
@@ -89,5 +91,12 @@ public class AppUsersServiceImpl implements AppUsersService{
         appUsersRepo.findById(id).orElseThrow(() -> new RuntimeException("Please Enter Valid ID"));
         appUsersRepo.deleteById(id);
         return "Successfully Deleted";
+    }
+
+    @Override
+    @Transactional
+    public Boolean authenticate(String username, String password){
+        return appUsersRepo.findByUsername(username).map(user -> user.getPassword().equals(password))
+                .orElse(false);
     }
 }

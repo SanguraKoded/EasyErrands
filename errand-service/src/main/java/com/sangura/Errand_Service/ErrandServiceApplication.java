@@ -8,7 +8,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories("com.sangura.Errand_Service.repos")
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableCaching

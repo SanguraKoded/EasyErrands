@@ -15,4 +15,6 @@ public interface AppUsersService {
     UserDto updateUser(Long id, UserCreateDto userCreateDto);
 
     String deleteUser(Long id);
+
+    Boolean authenticate(String username, String password);
 }

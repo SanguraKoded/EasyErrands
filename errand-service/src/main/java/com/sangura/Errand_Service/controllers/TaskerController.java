@@ -4,6 +4,7 @@ import com.sangura.Errand_Service.Dtos.TaskerDto;
 import com.sangura.Errand_Service.Dtos.TaskerSavedDto;
 import com.sangura.Errand_Service.entities.Tasker;
 import com.sangura.Errand_Service.services.TaskerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,32 +22,32 @@ public class TaskerController {
         this.taskerService = taskerService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/admin/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TaskerSavedDto> createTasker(@RequestBody TaskerDto taskerDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(taskerService.createTasker(taskerDto));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteTasker(@PathVariable Long id){
+    public ResponseEntity<String> deleteTasker(@PathVariable("id") Long id){
         return ResponseEntity.ok(taskerService.deleteTasker(id));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<TaskerSavedDto>> getAll(){
         return ResponseEntity.ok(taskerService.getAllTaskers());
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/admin/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TaskerSavedDto> updateTasker(@PathVariable Long id, @RequestBody TaskerDto taskerDto){
+    public ResponseEntity<TaskerSavedDto> updateTasker(@PathVariable("id") Long id, @RequestBody TaskerDto taskerDto){
         return ResponseEntity.ok(taskerService.updateTasker(id, taskerDto));
     }
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<TaskerSavedDto> findTaskerById(@PathVariable Long id){
+    public ResponseEntity<TaskerSavedDto> findTaskerById(@PathVariable("id") Long id){
         return ResponseEntity.ok(taskerService.getTaskerById(id));
     }
 }

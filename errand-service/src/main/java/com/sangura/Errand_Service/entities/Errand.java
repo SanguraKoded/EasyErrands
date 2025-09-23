@@ -48,6 +48,9 @@ public class Errand {
     public Errand() {
     }
 
+
+
+
     public long getId() {
         return id;
     }

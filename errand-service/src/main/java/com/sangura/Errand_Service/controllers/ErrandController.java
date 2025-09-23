@@ -2,8 +2,8 @@ package com.sangura.Errand_Service.controllers;
 
 import com.sangura.Errand_Service.Dtos.ErrandDto;
 import com.sangura.Errand_Service.Dtos.ErrandSavedDto;
-import com.sangura.Errand_Service.entities.Errand;
 import com.sangura.Errand_Service.services.ErrandService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,38 +15,50 @@ import java.util.List;
 @RestController
 public class ErrandController {
 
+
     private final ErrandService errandService;
 
     public ErrandController(ErrandService errandService) {
         this.errandService = errandService;
     }
 
-    @PostMapping("/create")
+    // ✅ CREATE
+    @PostMapping("/user/create")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ErrandSavedDto> createErrand(@RequestBody ErrandDto errand){
-        return ResponseEntity.status(HttpStatus.CREATED).body(errandService.createErrand(errand));
+    public ResponseEntity<ErrandSavedDto> createErrand(@RequestBody ErrandDto errand) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(errandService.createErrand(errand));
     }
-    @DeleteMapping("/delete")
+
+    // ✅ DELETE by ID
+    @DeleteMapping("/admin/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteErrand(@PathVariable Long id){
+    public ResponseEntity<String> deleteErrand(@PathVariable Long id) {
         return ResponseEntity.ok(errandService.deleteErrand(id));
     }
 
-    @PutMapping("/update")
+    // ✅ UPDATE by ID
+    @PutMapping("/user/update/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ErrandSavedDto> updateErrand(@PathVariable Long id, @RequestBody ErrandDto errandDto){
+    public ResponseEntity<ErrandSavedDto> updateErrand(
+            @PathVariable Long id,
+            @RequestBody ErrandDto errandDto
+    ) {
         return ResponseEntity.ok(errandService.updateErrand(id, errandDto));
     }
 
-    @GetMapping("/all")
+    // ✅ GET ALL
+    @GetMapping("/admin/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ErrandSavedDto>> getAllErrands(){
+    public ResponseEntity<List<ErrandSavedDto>> getAllErrands() {
         return ResponseEntity.ok(errandService.getAllActiveErrands());
     }
 
-    @GetMapping("/{id}")
+    // ✅ GET by ID
+    @GetMapping("/user/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ErrandSavedDto> getErrandById(@PathVariable Long id){
+    public ResponseEntity<ErrandSavedDto> getErrandById(@PathVariable Long id) {
         return ResponseEntity.ok(errandService.getErrandById(id));
     }
 }
