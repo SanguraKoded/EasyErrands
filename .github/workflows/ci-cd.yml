@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest   # Use the latest Ubuntu runner
 
     env:
-      DOCKER_IMAGE: your-dockerhub-username/errand-service  # Replace with your Docker Hub username
+      DOCKER_IMAGE: sangurakoded/errand-service  # Replace with your Docker Hub username
       DOCKER_TAG: ${{ github.sha }}  # Use commit SHA as tag
 
     steps:
