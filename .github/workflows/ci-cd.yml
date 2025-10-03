@@ -19,6 +19,17 @@ jobs:
       DOCKER_TAG: ${{ github.sha }}              # Tag the image with the commit SHA
 
     steps:
+
+      # --------------------------
+      # Step 0: Verify Docker secrets exist
+      # --------------------------
+      - name: Check Docker secrets
+        run: |
+          if [[ -z "${{ secrets.DOCKER_HUB_USERNAME }}" || -z "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" ]]; then
+            echo "ERROR: Docker Hub secrets are missing! Please add DOCKER_HUB_USERNAME and DOCKER_HUB_ACCESS_TOKEN in Actions secrets."
+            exit 1
+          fi
+
       # --------------------------
       # Step 1: Checkout repository
       # --------------------------
