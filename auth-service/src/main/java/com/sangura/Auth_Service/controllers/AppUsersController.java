@@ -30,27 +30,27 @@ public class AppUsersController {
 
     }
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<List<UserDto>> getAllUsers(){
         return ResponseEntity.ok(appUsersService.getAllUsers());
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/user/update/{id}")
     @PreAuthorize("hasRole('USER')")
-    ResponseEntity<UserDto> updateUser(@PathVariable Long id,  @RequestBody UserCreateDto userCreateDto){
+    ResponseEntity<UserDto> updateUser(@PathVariable ("id") Long id,  @RequestBody UserCreateDto userCreateDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(appUsersService.updateUser(id, userCreateDto));
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<UserDto> findUserById(@PathVariable Long id){
+    ResponseEntity<UserDto> findUserById(@PathVariable ("id") Long id){
         return ResponseEntity.ok(appUsersService.findUserById(id));
     }
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/user/delete/{id}")
     @PreAuthorize("hasRole('USER')")
-    ResponseEntity<String> deleteUser(@PathVariable Long id){
+    ResponseEntity<String> deleteUser(@PathVariable ("id") Long id){
         return ResponseEntity.ok(appUsersService.deleteUser(id));
     }
 }

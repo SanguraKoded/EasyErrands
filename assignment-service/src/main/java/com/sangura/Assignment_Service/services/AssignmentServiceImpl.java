@@ -45,7 +45,6 @@ public class AssignmentServiceImpl implements AssignmentService{
 
     @Override
     @Transactional
-    @KafkaListener(topics = KafkaTopics.Errand_Created, groupId = "assignment-service")
     public AssignmentDto createAssignment(AssignmentCreateDto assignmentCreateDto) {
         Assignment assignment = assignmentMapper.toEntity(assignmentCreateDto);
         try{

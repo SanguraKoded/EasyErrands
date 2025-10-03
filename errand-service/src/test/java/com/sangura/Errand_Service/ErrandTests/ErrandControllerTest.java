@@ -1,4 +1,4 @@
-package com.sangura.Errand_Service;
+package com.sangura.Errand_Service.ErrandTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sangura.Errand_Service.Dtos.ErrandDto;
@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;

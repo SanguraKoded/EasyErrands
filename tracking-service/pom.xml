@@ -2,266 +2,205 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.sangura</groupId>
-		<artifactId>easy-errands</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
 
-	<artifactId>tracking-service</artifactId>
-	<name>tracking-service</name>
-	<description>Tracking Service</description>
-	<url/>
+    <groupId>com.sangura</groupId>
+    <artifactId>tracking-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
-	<properties>
-		<java.version>21</java.version>
-		<spring-cloud.version>2025.0.0</spring-cloud.version>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-sleuth</artifactId>
-			<version>3.1.11</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>2.19.1</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.7.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-			<version>3.3.8</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.19.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>1.5.5.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-			<version>3.5.3</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
-			<version>3.5.3</version>
-		</dependency>
+    <name>tracking-service</name>
+    <description>Tracking microservice with Spring Boot</description>
 
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>5.13.4</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>testcontainers</artifactId>
-			<version>1.21.3</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- Postgres Testcontainer -->
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>test</scope>
-		</dependency>
 
-		<!-- Kafka Testcontainer (for async events) -->
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>kafka</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.redis.testcontainers</groupId>
-			<artifactId>testcontainers-redis</artifactId>
-			<version>1.6.4</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/kafka-utils/kafka-utils -->
+    <!-- ✅ Spring Boot parent manages versions -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
+    </parent>
 
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sangura</groupId>
-			<artifactId>common-events</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-			<version>4.3.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-			<version>3.5.4</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-resource-server -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-			<version>3.5.4</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-			<version>3.5.4</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j2-impl</artifactId>
-			<version>3.0.0-beta2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>1.5.5.Final</version>
-			<scope>provided</scope>
-		</dependency>
+    <properties>
+        <java.version>17</java.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <testcontainers.version>1.20.3</testcontainers.version>
+        <keycloak.version>24.0.4</keycloak.version>
+    </properties>
+
+    <dependencies>
+        <!-- Spring Boot starters -->
         <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.keycloak</groupId>
-			<artifactId>keycloak-spring-boot-starter</artifactId>
-			<version>24.0.4</version>
-		</dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+        <!-- Database -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.7</version>
+        </dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>1.18.34</version>
-						</path>
-						<path>
-							<groupId>org.springframework.boot</groupId>
-							<artifactId>spring-boot-configuration-processor</artifactId>
-							<version>3.3.4</version> <!-- match your Spring Boot version -->
-						</path>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>1.5.5.Final</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
+        <!-- Redis & Cache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
 
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <!-- Keycloak -->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-boot-starter</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
 
+        <!-- MapStruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
+        <!-- Spring Boot configuration processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ✅ Spring Cloud Netflix Eureka (discovery client) -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sangura</groupId>
+            <artifactId>Errand_Service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope> <!-- only for tests -->
+        </dependency>
+
+        <!-- ✅ OpenFeign for inter-service calls -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- ✅ Kafka for event streaming -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- ✅ Shared events module -->
+        <dependency>
+            <groupId>com.sangura</groupId>
+            <artifactId>common-events</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Testcontainers -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2023.0.1</version> <!-- ✅ aligns with Spring Boot 3.3.x -->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <systemExitTimeout>30</systemExitTimeout>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>

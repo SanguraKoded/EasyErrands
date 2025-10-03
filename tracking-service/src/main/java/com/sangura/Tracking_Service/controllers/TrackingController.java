@@ -20,28 +20,28 @@ public class TrackingController {
     }
 
 
-    @PostMapping("/create")
+    @PostMapping("/user/create")
     @PreAuthorize("hasRole('USER')")
     ResponseEntity<TrackingDto> createTracking(@RequestBody TrackingCreateDto trackingDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(trackingService.createTracking(trackingDto));
 
     }
 
-    @PutMapping("/complete/{id}")
+    @PutMapping("/admin/complete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<String> completeTracking(@PathVariable Long id){
+    ResponseEntity<String> completeTracking(@PathVariable ("id") Long id){
         return ResponseEntity.ok(trackingService.completeTracking(id));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/admin/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<TrackingDto> updateTracking(@PathVariable Long id, @RequestBody TrackingCreateDto trackingDto){
+    ResponseEntity<TrackingDto> updateTracking(@PathVariable ("id") Long id, @RequestBody TrackingCreateDto trackingDto){
         return ResponseEntity.ok(trackingService.updateTracking(id, trackingDto));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     @PreAuthorize("hasRole('USER')")
-    ResponseEntity<TrackingDto> findTrackingById(@PathVariable Long id){
+    ResponseEntity<TrackingDto> findTrackingById(@PathVariable ("id") Long id){
         return ResponseEntity.ok(trackingService.findTrackingById(id));
     }
 }

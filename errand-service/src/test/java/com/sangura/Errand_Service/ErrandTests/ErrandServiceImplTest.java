@@ -1,4 +1,4 @@
-package com.sangura.Errand_Service;
+package com.sangura.Errand_Service.ErrandTests;
 
 import com.sangura.Errand_Service.Dtos.ErrandDto;
 import com.sangura.Errand_Service.Dtos.ErrandSavedDto;

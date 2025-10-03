@@ -6,5 +6,6 @@ public enum ErrandEventType {
     UPDATED,
     ASSIGNED,
     CANCELLED,
-    COMPLETED
+    COMPLETED,
+    DELETED
 }

@@ -1,4 +1,4 @@
-package com.sangura.Errand_Service;
+package com.sangura.Errand_Service.ErrandTests;
 
 import com.sangura.Errand_Service.config.SecurityConfig;
 import com.sangura.Errand_Service.controllers.ErrandController;

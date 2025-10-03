@@ -36,6 +36,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.3.232</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -43,11 +51,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.nimbusds</groupId>
+                    <artifactId>oauth2-oidc-sdk</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -79,6 +91,7 @@
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-spring-boot-starter</artifactId>
             <version>${keycloak.version}</version>
+
         </dependency>
 
         <!-- MapStruct -->
@@ -112,6 +125,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- ✅ OpenFeign for inter-service calls -->
@@ -124,6 +143,14 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka-test -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <version>3.2.4</version> <!-- match Boot 3.3.4 -->
+            <scope>test</scope>
         </dependency>
 
         <!-- ✅ Shared events module -->
@@ -158,6 +185,25 @@
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Spring Security (only keep if you still need it; exclude Nimbus) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.nimbusds</groupId>
+                    <artifactId>nimbus-jose-jwt</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.testcontainers/kafka -->
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -174,10 +220,65 @@
 
     <build>
         <plugins>
+            <!-- Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- Unit tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <!-- Integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*IntegrationTest.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <!-- Default: unit tests only -->
+        <profile>
+            <id>unit-tests</id>
+            <properties>
+                <skipITs>true</skipITs>
+            </properties>
+        </profile>
+
+        <!-- Run integration tests (Kafka, DB, etc.) -->
+        <profile>
+            <id>integration-tests</id>
+            <properties>
+                <skipITs>false</skipITs>
+            </properties>
+        </profile>
+    </profiles>
+
+
 </project>

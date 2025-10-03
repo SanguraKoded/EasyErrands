@@ -3,6 +3,7 @@ package com.sangura.common.events.DTOs;
 import com.sangura.common.events.enums.ErrandEventType;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class ErrandEvent {
 
@@ -17,6 +18,9 @@ public class ErrandEvent {
     private Instant occuredAt = Instant.now();
 
     public ErrandEvent() {
+    }
+
+    public ErrandEvent(UUID uuid, String updatedTestErrand) {
     }
 
     public ErrandEventType getEventType() {
