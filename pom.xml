@@ -11,6 +11,13 @@
     <name>Easy Errands</name>
     <description>Parent project for Easy Errands microservices</description>
 
+    <properties>
+        <!-- Default values for Liquibase DB connection, can be overridden via -Ddb.url etc. -->
+        <db.url>jdbc:postgresql://localhost:5432/your_db</db.url>
+        <db.username>postgres</db.username>
+        <db.password>Manyika12!</db.password>
+    </properties>
+
     <modules>
         <module>common-events</module>   <!-- keep this first -->
         <module>errand-service</module>
