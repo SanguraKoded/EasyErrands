@@ -37,5 +37,11 @@
       <user-name>postgres</user-name>
       <schema-mapping />
     </data-source>
+    <data-source name="tracking_service_db@mongo" uuid="2cff6e09-6dc1-4233-855e-bb7902f194c4">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MONGO" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>mongo</user-name>
+      <schema-mapping />
+    </data-source>
   </component>
 </project>

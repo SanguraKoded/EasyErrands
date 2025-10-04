@@ -8,7 +8,7 @@ public class TrackingEvent {
 
     private TrackingEventType eventType;
 
-    private Long trackingId;
+    private String trackingId;
 
     private Long assignmentId;
 
@@ -16,7 +16,7 @@ public class TrackingEvent {
 
     private LocalDateTime createdAt;
 
-    public TrackingEvent(TrackingEventType eventType, Long trackingId, Long assignmentId, String payload, LocalDateTime createdAt) {
+    public TrackingEvent(TrackingEventType eventType, String trackingId, Long assignmentId, String payload, LocalDateTime createdAt) {
         this.eventType = eventType;
         this.trackingId = trackingId;
         this.assignmentId = assignmentId;
@@ -32,11 +32,11 @@ public class TrackingEvent {
         this.eventType = eventType;
     }
 
-    public Long getTrackingId() {
+    public String getTrackingId() {
         return trackingId;
     }
 
-    public void setTrackingId(Long trackingId) {
+    public void setTrackingId(String trackingId) {
         this.trackingId = trackingId;
     }
 
