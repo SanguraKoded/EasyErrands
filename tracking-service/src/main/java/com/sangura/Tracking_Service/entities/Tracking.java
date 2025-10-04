@@ -1,21 +1,16 @@
 package com.sangura.Tracking_Service.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Document(collection = "tracking")
 public class Tracking {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private String id;
 
     private long assignmentId;
 
@@ -25,11 +20,12 @@ public class Tracking {
 
     private long delayedTime;
 
+    @Indexed(expireAfterSeconds = 86400)
     private LocalDateTime timeCreated;
 
     private LocalDateTime deadLine;
 
-    public Tracking(long id, long assignmentId, Boolean isComplete, Boolean isDelayed, long delayedTime, LocalDateTime timeCreated, LocalDateTime deadLine) {
+    public Tracking(String id, long assignmentId, Boolean isComplete, Boolean isDelayed, long delayedTime, LocalDateTime timeCreated, LocalDateTime deadLine) {
         this.id = id;
         this.assignmentId = assignmentId;
         this.isComplete = isComplete;
@@ -39,11 +35,11 @@ public class Tracking {
         this.deadLine = deadLine;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

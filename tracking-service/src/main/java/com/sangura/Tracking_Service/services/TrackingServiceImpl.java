@@ -67,7 +67,7 @@ public class TrackingServiceImpl implements TrackingService{
     @Override
     @Transactional
     @CachePut(value="tracking", key="#id")
-    public TrackingDto updateTracking(Long id, TrackingCreateDto trackingDto) {
+    public TrackingDto updateTracking(String id, TrackingCreateDto trackingDto) {
         trackingRepo.findById(id).orElseThrow(()-> new RuntimeException("Please Enter Correct ID"));
 
         Tracking updatedTracking = trackingRepo.save(trackingMapper.toEntity(trackingDto));
@@ -82,7 +82,7 @@ public class TrackingServiceImpl implements TrackingService{
 
     @Override
     @Transactional
-    public String completeTracking(Long id) {
+    public String completeTracking(String id) {
         Tracking tracking = trackingRepo.findById(id).orElseThrow(()-> new RuntimeException("Please Enter Correct ID"));
         tracking.setComplete(Boolean.TRUE);
         trackingRepo.save(tracking);
@@ -98,7 +98,7 @@ public class TrackingServiceImpl implements TrackingService{
     @Override
     @Cacheable(value="tracking", key="#id")
     @Transactional
-    public TrackingDto findTrackingById(Long id) {
+    public TrackingDto findTrackingById(String id) {
 
         Tracking foundTracking = trackingRepo.findById(id).orElseThrow(() -> new RuntimeException("Please Enter Valid ID"));
         return trackingMapper.toDto(foundTracking);

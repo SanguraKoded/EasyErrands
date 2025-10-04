@@ -8,9 +8,9 @@ public interface TrackingService {
 
     TrackingDto createTracking(TrackingCreateDto trackingDto);
 
-    TrackingDto updateTracking(Long id, TrackingCreateDto trackingDto);
+    TrackingDto updateTracking(String id, TrackingCreateDto trackingDto);
 
-    String completeTracking(Long id);
+    String completeTracking(String id);
 
-    TrackingDto findTrackingById(Long id);
+    TrackingDto findTrackingById(String id);
 }

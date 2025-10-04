@@ -29,19 +29,19 @@ public class TrackingController {
 
     @PutMapping("/admin/complete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<String> completeTracking(@PathVariable ("id") Long id){
+    ResponseEntity<String> completeTracking(@PathVariable ("id") String id){
         return ResponseEntity.ok(trackingService.completeTracking(id));
     }
 
     @PutMapping("/admin/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<TrackingDto> updateTracking(@PathVariable ("id") Long id, @RequestBody TrackingCreateDto trackingDto){
+    ResponseEntity<TrackingDto> updateTracking(@PathVariable ("id") String id, @RequestBody TrackingCreateDto trackingDto){
         return ResponseEntity.ok(trackingService.updateTracking(id, trackingDto));
     }
 
     @GetMapping("/user/{id}")
     @PreAuthorize("hasRole('USER')")
-    ResponseEntity<TrackingDto> findTrackingById(@PathVariable ("id") Long id){
+    ResponseEntity<TrackingDto> findTrackingById(@PathVariable ("id") String id){
         return ResponseEntity.ok(trackingService.findTrackingById(id));
     }
 }

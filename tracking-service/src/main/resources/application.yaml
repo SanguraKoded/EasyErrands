@@ -5,11 +5,7 @@ server:
 spring:
   application:
     name: tracking-service
-  datasource:
-    url: jdbc:postgresql://postgres:5432/tracking_service
-    username: postgres
-    password: Manyika12!
-    driver-class-name: org.postgresql.Driver
+
   config:
     import: optional:configserver:http://config-server:8888
   security:
@@ -24,6 +20,8 @@ spring:
     redis:
       host: redis   # name from docker-compose
       port: 6379
+    mongodb:
+      uri: mongodb://mongo:27017/tracking_service_db
 keycloak:
   realm: easyerrands-realm
   auth-server-url: http://localhost:8080

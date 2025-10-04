@@ -1,7 +1,7 @@
 package com.sangura.Tracking_Service.repos;
 
 import com.sangura.Tracking_Service.entities.Tracking;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface TrackingRepo extends JpaRepository<Tracking, Long> {
+public interface TrackingRepo extends MongoRepository<Tracking, String> {
 }
