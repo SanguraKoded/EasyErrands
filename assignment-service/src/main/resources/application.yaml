@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: assignment-service
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
   datasource:
     url: jdbc:postgresql://postgres:5432/assignment_service
     username: postgres
@@ -26,37 +28,11 @@ spring:
     redis:
       host: redis   # name from docker-compose
       port: 6379
-keycloak:
-  realm: easyerrands-realm
-  auth-server-url: http://localhost:8080
-  resource: assignment-service
-  bearer-only: true
-
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     open-in-view: false
-eureka:
-  client:
-    service-url:
-      defaultZone: http://discover-service:8761/eureka/
-    fetch-registry: true
-    register-with-eureka: true
-    initial-instance-info-replication-interval-seconds: 40
-    registry-fetch-interval-seconds: 10
-    instance:
-      prefer-ip-address: true
-      hostname: assignment-service
-      lease-renewal-interval-in-seconds: 10
-      lease-expiration-duration-in-seconds: 30
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
   kafka:
     bootstrap-servers: kafka:9092
     producer:
@@ -74,6 +50,31 @@ management:
     listener:
       ack-mode: record
       missing-topics-fatal: false
+keycloak:
+  realm: easyerrands-realm
+  auth-server-url: http://localhost:8080
+  resource: assignment-service
+  bearer-only: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discover-service:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+    initial-instance-info-replication-interval-seconds: 40
+    registry-fetch-interval-seconds: 10
+  instance:
+    prefer-ip-address: true
+    hostname: assignment-service
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 logging:
   level:

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: sangurakoded
+      changes:
+        - createCollection:
+            collectionName: tracking
+
+  - changeSet:
+      id: 2
+      author: sangurakoded
+      changes:
+        - insertOne:
+            collectionName: tracking
+            document:
+              _id: "sample"
+              assignmentId: 0
+              isComplete: false
+              isDelayed: false
+              delayedTime: 0
+              timeCreated: "2025-10-04T00:00:00Z"
+              deadLine: "2025-10-05T00:00:00Z"

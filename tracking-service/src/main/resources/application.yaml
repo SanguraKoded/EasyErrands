@@ -5,6 +5,8 @@ server:
 spring:
   application:
     name: tracking-service
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
   config:
     import: optional:configserver:http://config-server:8888
@@ -28,14 +30,7 @@ keycloak:
   resource: tracking-service
   bearer-only: true
 
-  jpa:
-    hibernate:
-      ddl-auto: update       # or validate / create / none / create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true           # Show SQL queries in console
-    open-in-view: false
+
 eureka:
   client:
     service-url:

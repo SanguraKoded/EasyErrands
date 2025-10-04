@@ -1,13 +1,10 @@
 # ============================================================
-# 🧩 CI/CD WORKFLOW — Quick-Errands Microservices
-# Builds, tags, and pushes each microservice image to Docker Hub
+# CI/CD WORKFLOW — Quick-Errands Microservices
+# Builds, runs Liquibase migrations, and pushes Docker images
 # ============================================================
 
 name: CI/CD for Quick-Errands Microservices
 
-# ------------------------------------------------------------
-# Trigger workflow on any push or pull request to the main branch
-# ------------------------------------------------------------
 on:
   push:
     branches: [ main ]
@@ -16,18 +13,17 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest   # GitHub-hosted Linux runner
+    runs-on: ubuntu-latest
 
     steps:
       # --------------------------------------------------------
-      # Step 1: Checkout the repository source code
+      # Step 1: Checkout the repository
       # --------------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v3
 
       # --------------------------------------------------------
-      # Step 2: Set up JDK 21 for Maven build
-      # Required since your Dockerfiles use Eclipse Temurin 21
+      # Step 2: Set up JDK 21 for Maven
       # --------------------------------------------------------
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -36,11 +32,7 @@ jobs:
           java-version: 21
 
       # --------------------------------------------------------
-      # Step 3: Authenticate with Docker Hub
-      # You must add these secrets under:
-      # GitHub Repo → Settings → Secrets → Actions
-      #   - DOCKER_HUB_USERNAME
-      #   - DOCKER_HUB_ACCESS_TOKEN
+      # Step 3: Log in to Docker Hub
       # --------------------------------------------------------
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -49,41 +41,58 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       # --------------------------------------------------------
-      # Step 4: Build and push Docker images for all microservices
-      # Each service folder must contain:
-      #   - A valid Dockerfile
-      #   - Its own pom.xml (for Maven)
-      # The script below loops over all microservices,
-      # builds each image, and pushes to Docker Hub
+      #  Step 4: Run Liquibase migrations for PostgreSQL Services
+      # --------------------------------------------------------
+      - name: Run Liquibase migrations for PostgreSQL services
+        run: |
+          postgres_services=("auth-service" "errand-service" "assignment-service")
+
+          for service in "${postgres_services[@]}"; do
+            echo "Running Liquibase migrations for $service (PostgreSQL)..."
+            mvn -pl $service liquibase:update \
+              -Ddb.url=${{ secrets.DB_URL }} \
+              -Ddb.username=${{ secrets.DB_USER }} \
+              -Ddb.password=${{ secrets.DB_PASS }}
+            echo "Done: $service (PostgreSQL)"
+            echo "----------------------------------------------------"
+          done
+
+        # --------------------------------------------------------
+        #  Step 5: Run Liquibase migrations for Tracking Service (MongoDB)
+        # --------------------------------------------------------
+
+      - name: Run Liquibase migrations for MongoDB tracking-service
+        run: |
+          echo "Running Liquibase for tracking-service (MongoDB)..."
+          mvn -pl tracking-service liquibase:update \
+            -Dliquibase.command.url=${{ secrets.MONGO_URL }} \
+            -Dliquibase.command.mongodbDatabase=${{ secrets.MONGO_DB }}
+          echo "Done: tracking-service (MongoDB)"
+
+
+      # --------------------------------------------------------
+      # Step 6: Build and push Docker images for all microservices
       # --------------------------------------------------------
       - name: Build and push Docker images for microservices
         run: |
-          # List of all your microservices
           services=("auth-service" "api-gateway" "config-server" "discovery-service" "errand-service" "tracking-service" "assignment-service")
 
-          # Iterate over each service folder
           for service in "${services[@]}"; do
-            echo "🚀 Building image for $service ..."
+            echo " Building image for $service ..."
           
-            # Build Docker image from that service’s Dockerfile
-            # - The context (.) includes the whole repo so shared modules like `common-events` are available
             docker build -t sangurakoded/$service:latest -f $service/Dockerfile .
-
-            # Tag image also with commit SHA for version tracking
             docker tag sangurakoded/$service:latest sangurakoded/$service:${{ github.sha }}
 
-            # Push both tags to Docker Hub
-            echo "📦 Pushing $service to Docker Hub..."
+            echo " Pushing $service to Docker Hub..."
             docker push sangurakoded/$service:latest
             docker push sangurakoded/$service:${{ github.sha }}
 
-            echo "✅ Done building and pushing $service"
+            echo " Done building and pushing $service"
             echo "----------------------------------------------------"
           done
 
       # --------------------------------------------------------
-      # Step 5: (Optional) — Clean up Docker images to free space
-      # GitHub runners have limited disk, so this is good hygiene
+      # Step 7: Clean up Docker images to free up space
       # --------------------------------------------------------
       - name: Clean up Docker images
         if: always()

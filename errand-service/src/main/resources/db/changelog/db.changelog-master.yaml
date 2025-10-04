@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: sangurakoded
+      changes:
+        - createTable:
+            tableName: errand
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: special_instructions
+                  type: TEXT
+              - column:
+                  name: time_created
+                  type: TIMESTAMP
+              - column:
+                  name: dead_line
+                  type: TIMESTAMP
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  name: is_done
+                  type: BOOLEAN
+              - column:
+                  name: time_taken
+                  type: BIGINT
+              - column:
+                  name: assigned_tasker
+                  type: BIGINT
+              - column:
+                  name: is_late
+                  type: BOOLEAN
+
+        - createTable:
+            tableName: tasker
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  name: errands_completed
+                  type: INTEGER
+              - column:
+                  name: active_errand_ids
+                  type: TEXT
+                  remarks: "Store list of IDs as comma-separated or JSON string"
+              - column:
+                  name: ratings
+                  type: INTEGER
