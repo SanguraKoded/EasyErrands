@@ -215,7 +215,7 @@
                 <configuration>
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
                     <url>mongodb://localhost:27017/tracking_service_db</url>
-                    <username>admin</username>
+                    <username>mongo</username>
                     <password>Manyika12!</password>
                     <!-- MongoDB Liquibase extension -->
                     <propertyFile>src/main/resources/liquibase.properties</propertyFile>

@@ -1,22 +1,32 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: sangurakoded
+      author: copilot
       changes:
         - createCollection:
-            collectionName: tracking
-
+            collectionName: tracking_events
   - changeSet:
       id: 2
-      author: sangurakoded
+      author: copilot
       changes:
-        - insertOne:
-            collectionName: tracking
-            document:
-              _id: "sample"
-              assignmentId: 0
-              isComplete: false
-              isDelayed: false
-              delayedTime: 0
-              timeCreated: "2025-10-04T00:00:00Z"
-              deadLine: "2025-10-05T00:00:00Z"
+        - createIndex:
+            collectionName: tracking_events
+            index:
+              name: idx_event_type
+              keys:
+                eventType: 1
+              options:
+                unique: false
+  - changeSet:
+      id: 3
+      author: copilot
+      changes:
+        - createIndex:
+            collectionName: tracking_events
+            index:
+              name: idx_timestamp
+              keys:
+                timestamp: 1
+              options:
+                unique: false
+
