@@ -214,7 +214,7 @@
                 <version>4.27.0</version>
                 <configuration>
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
-                    <url>mongodb://mongo:Manyika12!@localhost:27017/tracking_service_db?authSource=admin</url>
+                    <url>mongodb://mongo:Manyika12%21@localhost:27017/tracking_service_db?authSource=admin</url>
                     <username>mongo</username>
                     <password>Manyika12!</password>
                     <!-- MongoDB Liquibase extension -->
