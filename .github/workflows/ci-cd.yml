@@ -58,7 +58,7 @@ jobs:
               -Dliquibase.url=$LIQUIBASE_URL \
               -Dliquibase.username=$LIQUIBASE_USERNAME \
               -Dliquibase.password=$LIQUIBASE_PASSWORD \
-              -Dliquibase.changeLogFile=src/main/resources/db/changelog/db.changelog-master.xml
+              -Dliquibase.changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml
             echo "Done: $service (PostgreSQL)"
             echo "----------------------------------------------------"
           done
