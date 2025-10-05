@@ -1,4 +1,4 @@
-name: CI/CD for Quick-Errands Microservices
+name: CI/CD for Easy-Errands Microservices
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:15
@@ -17,6 +18,12 @@ jobs:
           POSTGRES_PASSWORD: Manyika12!
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
       mongo:
         image: mongo:6.0
         env:
@@ -41,30 +48,56 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # 👇 Added Step
       - name: Build and install local Maven modules
         run: mvn clean install -DskipTests
 
+      - name: Wait for Postgres to be ready
+        run: |
+          echo "Waiting for Postgres to start..."
+          for i in {1..20}; do
+            if docker exec $(docker ps -qf "ancestor=postgres:15") pg_isready -U postgres; then
+              echo "Postgres is ready!"
+              break
+            fi
+            echo "Still waiting..."
+            sleep 3
+          done
+
+      - name: Create service databases
+        run: |
+          echo "Creating databases..."
+          docker exec $(docker ps -qf "ancestor=postgres:15") psql -U postgres -c "CREATE DATABASE auth_service_db;"
+          docker exec $(docker ps -qf "ancestor=postgres:15") psql -U postgres -c "CREATE DATABASE errand_service_db;"
+          docker exec $(docker ps -qf "ancestor=postgres:15") psql -U postgres -c "CREATE DATABASE assignment_service_db;"
+          echo "Databases created."
+
       - name: Run Liquibase migrations for PostgreSQL services
         env:
-          LIQUIBASE_URL: ${{ secrets.DB_URL }}
           LIQUIBASE_USERNAME: ${{ secrets.DB_USER }}
           LIQUIBASE_PASSWORD: ${{ secrets.DB_PASS }}
         run: |
           postgres_services=("auth-service" "errand-service" "assignment-service")
           for service in "${postgres_services[@]}"; do
+            db_name="${service//-/_}_db"
+            db_url="jdbc:postgresql://localhost:5432/${db_name}"
+
             echo "Clearing Liquibase checksums for $service..."
-            mvn -pl $service liquibase:clearCheckSums
-            echo "Running Liquibase migrations for $service (PostgreSQL)..."
-            mvn -pl $service liquibase:update \
-              -Dliquibase.url=$LIQUIBASE_URL \
+            mvn -pl $service liquibase:clearCheckSums \
+              -Dliquibase.url=$db_url \
               -Dliquibase.username=$LIQUIBASE_USERNAME \
               -Dliquibase.password=$LIQUIBASE_PASSWORD \
               -Dliquibase.changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml
-            echo "Done: $service (PostgreSQL)"
+
+            echo "Running Liquibase migrations for $service..."
+            mvn -pl $service liquibase:update \
+              -Dliquibase.url=$db_url \
+              -Dliquibase.username=$LIQUIBASE_USERNAME \
+              -Dliquibase.password=$LIQUIBASE_PASSWORD \
+              -Dliquibase.changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml
+
+            echo "✅ Done: $service"
             echo "----------------------------------------------------"
           done
-      
 
       - name: Run Liquibase migrations for MongoDB tracking-service
         env:
@@ -75,8 +108,7 @@ jobs:
           mvn -pl tracking-service liquibase:update \
             -Dliquibase.command.url=$MONGO_URL \
             -Dliquibase.command.mongodbDatabase=$MONGO_DB
-          echo "Done: tracking-service (MongoDB)"
-      
+          echo "✅ Done: tracking-service (MongoDB)"
 
       - name: Build and push Docker images for microservices
         run: |
@@ -87,7 +119,7 @@ jobs:
             docker tag sangurakoded/$service:latest sangurakoded/$service:${{ github.sha }}
             docker push sangurakoded/$service:latest
             docker push sangurakoded/$service:${{ github.sha }}
-            echo "Done building and pushing $service"
+            echo "✅ Done building and pushing $service"
             echo "----------------------------------------------------"
           done
 
