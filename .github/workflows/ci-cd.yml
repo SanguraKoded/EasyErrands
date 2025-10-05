@@ -36,12 +36,13 @@ jobs:
           for service in "${postgres_services[@]}"; do
             echo "Running Liquibase migrations for $service (PostgreSQL)..."
             mvn -pl $service liquibase:update \
-              -Ddb.url=${{ secrets.DB_URL }} \
-              -Ddb.username=${{ secrets.DB_USER }} \
-              -Ddb.password=${{ secrets.DB_PASS }}
+              -Dliquibase.url=${{ secrets.DB_URL }} \
+              -Dliquibase.username=${{ secrets.DB_USER }} \
+              -Dliquibase.password=${{ secrets.DB_PASS }}
             echo "Done: $service (PostgreSQL)"
             echo "----------------------------------------------------"
           done
+      
 
       - name: Run Liquibase migrations for MongoDB tracking-service
         run: |
