@@ -102,14 +102,12 @@ jobs:
       - name: Run Liquibase migrations for MongoDB tracking-service
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}
-          MONGO_DB: ${{ secrets.MONGO_DB }}
         run: |
           echo "Running Liquibase for tracking-service (MongoDB)..."
           mvn -pl tracking-service liquibase:update \
             -Dliquibase.url=$MONGO_URL \
             -Dliquibase.changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml
-
-  echo "✅ Done: tracking-service (MongoDB)"
+          echo "✅ Done: tracking-service (MongoDB)"
 
       - name: Build and push Docker images for microservices
         run: |
