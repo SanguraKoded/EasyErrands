@@ -53,6 +53,8 @@ jobs:
         run: |
           postgres_services=("auth-service" "errand-service" "assignment-service")
           for service in "${postgres_services[@]}"; do
+            echo "Clearing Liquibase checksums for $service..."
+            mvn -pl $service liquibase:clearCheckSums
             echo "Running Liquibase migrations for $service (PostgreSQL)..."
             mvn -pl $service liquibase:update \
               -Dliquibase.url=$LIQUIBASE_URL \
