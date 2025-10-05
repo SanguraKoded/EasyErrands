@@ -31,26 +31,35 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: Run Liquibase migrations for PostgreSQL services
+        env:
+          LIQUIBASE_URL: ${{ secrets.DB_URL }}
+          LIQUIBASE_USERNAME: ${{ secrets.DB_USER }}
+          LIQUIBASE_PASSWORD: ${{ secrets.DB_PASS }}
         run: |
           postgres_services=("auth-service" "errand-service" "assignment-service")
           for service in "${postgres_services[@]}"; do
             echo "Running Liquibase migrations for $service (PostgreSQL)..."
             mvn -pl $service liquibase:update \
-              -Dliquibase.url=${{ secrets.DB_URL }} \
-              -Dliquibase.username=${{ secrets.DB_USER }} \
-              -Dliquibase.password=${{ secrets.DB_PASS }}
+              -Dliquibase.url=$LIQUIBASE_URL \
+              -Dliquibase.username=$LIQUIBASE_USERNAME \
+              -Dliquibase.password=$LIQUIBASE_PASSWORD
             echo "Done: $service (PostgreSQL)"
             echo "----------------------------------------------------"
           done
       
+      
 
       - name: Run Liquibase migrations for MongoDB tracking-service
+        env:
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          MONGO_DB: ${{ secrets.MONGO_DB }}
         run: |
           echo "Running Liquibase for tracking-service (MongoDB)..."
           mvn -pl tracking-service liquibase:update \
-            -Dliquibase.command.url=${{ secrets.MONGO_URL }} \
-            -Dliquibase.command.mongodbDatabase=${{ secrets.MONGO_DB }}
+            -Dliquibase.command.url=$MONGO_URL \
+            -Dliquibase.command.mongodbDatabase=$MONGO_DB
           echo "Done: tracking-service (MongoDB)"
+      
 
       - name: Build and push Docker images for microservices
         run: |
