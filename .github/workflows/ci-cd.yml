@@ -106,9 +106,10 @@ jobs:
         run: |
           echo "Running Liquibase for tracking-service (MongoDB)..."
           mvn -pl tracking-service liquibase:update \
-            -Dliquibase.command.url=$MONGO_URL \
-            -Dliquibase.command.mongodbDatabase=$MONGO_DB
-          echo "✅ Done: tracking-service (MongoDB)"
+            -Dliquibase.url=$MONGO_URL \
+            -Dliquibase.changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml
+
+  echo "✅ Done: tracking-service (MongoDB)"
 
       - name: Build and push Docker images for microservices
         run: |
