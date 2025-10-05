@@ -208,7 +208,26 @@
                     <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.27.0</version>
+                <configuration>
+                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
+                    <url>mongodb://localhost:27017/tracking_service_db</url>
+                    <username>admin</username>
+                    <password>Manyika12!</password>
+                    <!-- MongoDB Liquibase extension -->
+                    <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.liquibase.ext</groupId>
+                        <artifactId>liquibase-mongodb</artifactId>
+                        <version>4.30.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 </project>
