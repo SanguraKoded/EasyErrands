@@ -273,6 +273,10 @@
                 <version>4.27.0</version>
                 <configuration>
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://localhost:5432/errand_service_db</url>
+                    <username>postgres</username>
+                    <password>Manyika12!</password>
                 </configuration>
             </plugin>
         </plugins>
